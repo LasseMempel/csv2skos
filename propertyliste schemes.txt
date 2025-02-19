@@ -1,6 +1,0 @@
-DC.title, Literal, True
-DC.description, Literal, True
-DC.creator, Literal, False
-DCTERMS.publisher, Literal, False
-DCTERMS.license, URIRef, False
-DCTERMS.rights, Literal, False

@@ -1,0 +1,3 @@
+notation,prefLabel,altLabel,definition,broader,narrower,related,closeMatch,relatedMatch,exactMatch,source,creator,seeAlso
+1D35Z,Wurst@de|sausage@en,Fleischstange@de|wiener@en|Buzzi@de,In Seitling gepresstes Fleisch@de,,1D35Y,1D35X,1D35W,1D35V,1D35U,http://www.wurst.de,Alfred E. Wurstmann,http://www.wikidata.org/entity/Q12345
+23jkl,Bratwurst@de|wutzel@fr|Curryhähnchen@de,Fahnerle@de,In Thüringen gebratene Wurst@de,1D35Z,,,,,,http://www.wurst.de,Alfred E. Wurstmann,http://www.wikidata.org/entity/Q12377

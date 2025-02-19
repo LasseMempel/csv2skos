@@ -1,0 +1,56 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://www.example.com/terminologies/sausagethesaurus/23jkl> a skos:Concept ;
+    dc:creator "Alfred E. Wurstmann" ;
+    dc:source "http://www.wurst.de" ;
+    rdfs:seeAlso "http://www.wikidata.org/entity/Q12377" ;
+    skos:altLabel "Curryhähnchen"@de,
+        "Fahnerle"@de ;
+    skos:broader <https://www.example.com/terminologies/sausagethesaurus/1D35Z> ;
+    skos:definition "In Thüringen gebratene Wurst"@de ;
+    skos:inScheme <https://www.example.com/terminologies/sausagethesaurus> ;
+    skos:notation "23jkl" ;
+    skos:prefLabel "Bratwurst"@de,
+        "wutzel"@fr .
+
+<https://github.com/LasseMempel/Terminologien/blob/main/navisOne/navisOne.py> a prov:SoftwareAgent .
+
+<https://www.example.com/terminologies/sausagethesaurus/1D35Z> a skos:Concept ;
+    dc:creator "Alfred E. Wurstmann" ;
+    dc:source "http://www.wurst.de" ;
+    rdfs:seeAlso "http://www.wikidata.org/entity/Q12345" ;
+    skos:altLabel "Buzzi"@de,
+        "Fleischstange"@de,
+        "wiener"@en ;
+    skos:closeMatch <1D35W> ;
+    skos:definition "In Seitling gepresstes Fleisch"@de ;
+    skos:exactMatch <1D35U> ;
+    skos:inScheme <https://www.example.com/terminologies/sausagethesaurus> ;
+    skos:narrower <https://www.example.com/terminologies/sausagethesaurus/1D35Y> ;
+    skos:notation "1D35Z" ;
+    skos:prefLabel "Wurst"@de,
+        "sausage"@en ;
+    skos:related <https://www.example.com/terminologies/sausagethesaurus/1D35X> ;
+    skos:relatedMatch <1D35V> ;
+    skos:topConceptOf <https://www.example.com/terminologies/sausagethesaurus> .
+
+<https://www.example.com/terminologies/sausagethesaurus> a skos:ConceptScheme,
+        prov:Entity ;
+    dc:creator "Wurstverlag" ;
+    dc:title "Wurstthesaurus"@de ;
+    dcterms:license "CC BY 4.0" ;
+    dcterms:publisher "http://creativecommons.org/licenses/by/4.0/" ;
+    dcterms:rights "http://creativecommons.org/licenses/by/4.0/" ;
+    skos:definition "Der Wurstthesaurus ist ein Thesaurus für Wurstwaren."@de ;
+    skos:hasTopConcept <https://www.example.com/terminologies/sausagethesaurus/1D35Z> ;
+    prov:wasAttributedTo <https://github.com/LasseMempel/Terminologien/blob/main/navisOne/navisOne.py> ;
+    prov:wasGeneratedBy [ a prov:Activity ;
+            prov:endedAtTime "2025-02-18T19:54:18.602886"^^xsd:dateTime ;
+            prov:startedAtTime "2025-02-18T19:54:18.599683"^^xsd:dateTime ;
+            prov:wasAssociatedWith <https://github.com/LasseMempel/Terminologien/blob/main/navisOne/navisOne.py> ] .
+

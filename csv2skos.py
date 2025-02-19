@@ -32,31 +32,35 @@ conceptPropertyDict = {"notation": (SKOS.notation, Literal, False),
                         "seeAlso": (RDFS.seeAlso, Literal, False)
                         }
 
-def buildTriples(df, subject, propertyDict):
+def buildTriples(g, df, subject, propertyDict, conceptScheme, conceptPrefix, seperator, baseLanguage):
     # iterate over all rows in df
     for index, row in df.iterrows():
         rowDict = {key:value for key, value in row.items()}
+
         if subject == "scheme":
             subject = conceptScheme
         else:
             subject = URIRef(conceptPrefix + rowDict["notation"])
             g.add((subject, RDF.type, SKOS.Concept))
             g.add((subject, SKOS.inScheme, conceptScheme))
+
         for key in propertyDict:
             if key in rowDict:
                 value = rowDict[key]
+
                 if isinstance(value, float) and math.isnan(value):
                     if key == "broader":
                         g.add((conceptScheme, SKOS.hasTopConcept, subject))
                         g.add((subject, SKOS.topConceptOf, conceptScheme))
                     continue
-                #print(value)
+
                 values = value.split(seperator)
                 property, datatype, isLangString = propertyDict[key]
                 langDict = {}
                 for object in values:
                     if property in [SKOS.broader, SKOS.narrower, SKOS.related]:
                         object = conceptPrefix + object
+
                     if isLangString:
                         if len(object.split("@")) > 1:
                             object, language = object.split("@")
@@ -71,61 +75,66 @@ def buildTriples(df, subject, propertyDict):
                             g.add((subject, SKOS.altLabel, Literal(object, lang=language)))
                         else:    
                             g.add((subject, property, Literal(object, lang=language)))
+
                     else:
                         g.add((subject, property, datatype(object)))
                     if property == SKOS.broader and "narrower" not in rowDict:
                         g.add((URIRef(object), SKOS.narrower, subject))
                     if property == SKOS.narrower and "broader" not in rowDict:
                             g.add((URIRef(object), SKOS.broader, subject))
+                            
     return g
 
-def main(conceptCsvPath, schemeCsvPath, scriptRepositoryPath):
+def main(conceptCsvPath, schemeCsvPath, scriptRepositoryPath, seperator, baseLanguage, baseUri):
 
-    # dataframes from csv paths   
+    # initialization of graph and provenance entities
+    g = Graph()
+    thesaurusCreation = BNode()
+    g.add((thesaurusCreation, RDF.type, PROV.Activity))
+    g.add((thesaurusCreation, PROV.startedAtTime, Literal(datetime.datetime.now(), datatype=XSD.dateTime)))
+    pythonScript = URIRef(scriptRepositoryPath)
+    g.add((pythonScript, RDF.type, PROV.SoftwareAgent))
+    g.add((thesaurusCreation, PROV.wasAssociatedWith, pythonScript))
+
+    # generate dataframes from csv paths   
     conceptsDf = pd.read_csv(conceptCsvPath)
     schemeDf = pd.read_csv(schemeCsvPath)
 
-    # global variables
-    baseUri = "https://www.example.com/terminologies/sausagethesaurus"
-    conceptPrefix = baseUri + "/"
-    seperator = "|"
-    baseLanguage = "de"
-
-    # provenance entities
-    pythonScript = URIRef(scriptRepositoryPath)
-    thesaurusCreation = BNode()
-
-    # global graph and concept scheme
-    g = Graph()
-
-    g.add((thesaurusCreation, PROV.startedAtTime, Literal(datetime.datetime.now(), datatype=XSD.dateTime)))
-    g.add((thesaurusCreation, PROV.wasAssociatedWith, pythonScript))
-    g.add((pythonScript, RDF.type, PROV.SoftwareAgent))
-    g.add((thesaurusCreation, RDF.type, PROV.Activity))
-
+    # create concept scheme and connect to provenance
     conceptScheme = URIRef(baseUri)
-
     g.add((conceptScheme, RDF.type, SKOS.ConceptScheme))
     g.add((conceptScheme, RDF.type, PROV.Entity))
-
     g.add((conceptScheme, PROV.wasGeneratedBy, thesaurusCreation))
     g.add((conceptScheme, PROV.wasAttributedTo, pythonScript))
 
-    # create concept scheme
-    g = buildTriples(schemeDf, "scheme", schemePropertyDict)
+    conceptPrefix = baseUri + "/"
 
-    # create concepts
-    g = buildTriples(conceptsDf, "concept", conceptPropertyDict)
+    # enrich concept scheme with metadata
+    g = buildTriples(g, schemeDf, "scheme", schemePropertyDict, conceptScheme, conceptPrefix, seperator, baseLanguage)
 
+    # create concepts and connect them to concept scheme
+    g = buildTriples(g, conceptsDf, "concept", conceptPropertyDict, conceptScheme, conceptPrefix, seperator, baseLanguage)
+
+    # add end time for thesaurus creation activity
     g.add((thesaurusCreation, PROV.endedAtTime, Literal(datetime.datetime.now(), datatype=XSD.dateTime)))
 
     # save graph to file
     g.serialize(destination="thesaurus.ttl",format="turtle")
 
-# custom parameters
-
+# paths to csv files
 conceptCsvPath = "concepts.csv"
 schemeCsvPath = "scheme.csv"
-scriptRepositoryPath = "https://github.com/kilian-weber/csv2skos"
 
-main(conceptCsvPath, schemeCsvPath)
+# repository url of this script
+scriptRepositoryPath = "https://github.com/LasseMempel/csv2skos/blob/master/csv2skos.py"
+
+# seperator character for multivalue cells in csv
+seperator = "|"
+
+# fallback language if no language is given in value
+baseLanguage = "de"
+
+# base uri of the thesaurus and the concepts
+baseUri = "https://www.example.com/terminologies/sausagethesaurus"
+
+main(conceptCsvPath, schemeCsvPath, scriptRepositoryPath, seperator, baseLanguage, baseUri)

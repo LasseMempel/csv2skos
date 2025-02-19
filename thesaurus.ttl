@@ -18,7 +18,7 @@
     skos:prefLabel "Bratwurst"@de,
         "wutzel"@fr .
 
-<https://github.com/LasseMempel/Terminologien/blob/main/navisOne/navisOne.py> a prov:SoftwareAgent .
+<https://github.com/LasseMempel/csv2skos/blob/master/csv2skos.py> a prov:SoftwareAgent .
 
 <https://www.example.com/terminologies/sausagethesaurus/1D35Z> a skos:Concept ;
     dc:creator "Alfred E. Wurstmann" ;
@@ -48,9 +48,9 @@
     dcterms:rights "http://creativecommons.org/licenses/by/4.0/" ;
     skos:definition "Der Wurstthesaurus ist ein Thesaurus für Wurstwaren."@de ;
     skos:hasTopConcept <https://www.example.com/terminologies/sausagethesaurus/1D35Z> ;
-    prov:wasAttributedTo <https://github.com/LasseMempel/Terminologien/blob/main/navisOne/navisOne.py> ;
+    prov:wasAttributedTo <https://github.com/LasseMempel/csv2skos/blob/master/csv2skos.py> ;
     prov:wasGeneratedBy [ a prov:Activity ;
-            prov:endedAtTime "2025-02-18T19:54:18.602886"^^xsd:dateTime ;
-            prov:startedAtTime "2025-02-18T19:54:18.599683"^^xsd:dateTime ;
-            prov:wasAssociatedWith <https://github.com/LasseMempel/Terminologien/blob/main/navisOne/navisOne.py> ] .
+            prov:endedAtTime "2025-02-19T12:00:14.026020"^^xsd:dateTime ;
+            prov:startedAtTime "2025-02-19T12:00:13.990606"^^xsd:dateTime ;
+            prov:wasAssociatedWith <https://github.com/LasseMempel/csv2skos/blob/master/csv2skos.py> ] .
 
